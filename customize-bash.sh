@@ -18,9 +18,9 @@ else
 fi
 
 echo "Using package manager: $(command -v microdnf || command -v dnf)"
-#$PKG_UPDATE
-#$PKG_INSTALL git tar unzip tzdata make gawk procps findutils
-#$PKG_CLEAN
+$PKG_UPDATE
+$PKG_INSTALL git tar unzip tzdata make gawk procps findutils nano
+$PKG_CLEAN
 
 echo "Installing Oh My Posh..."
 mkdir -p "$HOME/.posh"
