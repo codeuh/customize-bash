@@ -9,8 +9,8 @@
   },
   "mounts": [
     "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,readonly",
-    "source=${localEnv:HOME}/.gitconfig,target=/opt/app-root/src/.gitconfig,type=bind,consistency=cached",
-    "source=${localWorkspaceFolderBasename}_zoxide,target=/opt/app-root/src/.local/share/zoxide,type=volume",
-    "source=${localWorkspaceFolderBasename}_blesh,target=/opt/app-root/src/.local/share/blesh,type=volume"
+    "source=${localEnv:HOME}/.gitconfig,target=/root/.gitconfig,type=bind,consistency=cached",
+    "source=${localWorkspaceFolderBasename}_zoxide,target=/root/.local/share/zoxide,type=volume",
+    "source=${localWorkspaceFolderBasename}_blesh,target=/root/.local/share/blesh,type=volume"
   ]
 }
