@@ -105,6 +105,9 @@ export FZF_DEFAULT_OPTS="--layout=reverse --preview 'bat --color=always {}'"
 export FZF_CTRL_T_COMMAND="find . -type f -not -path './.git/*'"
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always {}'"
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window up:3:wrap"
+
 EOF
 
-echo "Daks Awesome Terminal Feature installation complete."
+echo '[[ -f ~/.bashrc ]] && source ~/.bashrc' >> ~/.bash_profile
+
+echo "Dakota's Awesome Terminal Feature installation complete."

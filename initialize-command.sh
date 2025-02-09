@@ -1,8 +1,16 @@
 #!/bin/bash
 
-mkdir -p "${HOME}/.dev-container/zoxide"
-mkdir -p "${HOME}/.dev-container/blesh"
+REPO_NAME="$1"
 
-# Set appropriate permissions
-chmod 755 "${HOME}/.dev-container/zoxide"
-chmod 755 "${HOME}/.dev-container/blesh"
+if [ -z "$REPO_NAME" ]; then
+    echo "Error: Repository name not provided"
+    exit 1
+fi
+
+for VOLUME in "zoxide" "blesh"; do
+    VOLUME_NAME="${REPO_NAME}_${VOLUME}"
+    if ! podman volume exists "$VOLUME_NAME"; then
+        echo "Creating volume: $VOLUME_NAME"
+        podman volume create "$VOLUME_NAME"
+    fi
+done
