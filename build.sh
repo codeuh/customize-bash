@@ -13,9 +13,7 @@ CONTAINER_ID=$(devcontainer --docker-path podman \
   --id-label "devcontainer.local_folder=$CURRENT_DIR" \
   up \
   | grep -o '{.*}' | jq -r '.containerId')
-
 echo "Container ID: $CONTAINER_ID"
-
 NEW_IMAGE_ID=$(podman inspect --format "{{.Image}}" $CONTAINER_ID)
 echo "New Image ID: $NEW_IMAGE_ID"
 
