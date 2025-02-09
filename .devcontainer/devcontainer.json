@@ -1,0 +1,15 @@
+{
+  "name": "dev-container",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "initializeCommand": ["bash", "${localWorkspaceFolder}/.devcontainer/initialize-command.sh"],
+  "mounts": [
+    "source=${localEnv:HOME}/.dev-container/zoxide,target=/opt/app-root/src/.local/share/zoxide,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.dev-container/blesh,target=/opt/app-root/src/.local/share/blesh,type=bind,consistency=cached"
+  ]
+}
