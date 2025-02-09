@@ -1,6 +1,5 @@
 #!/bin/bash
-
-# this install-daks-awesome-terminal.sh script is used to install a suit of terminal customizations that i've been experiementing with.
+# this script is used to install a suite of terminal customizations
 set -e
 
 echo "Updating system and installing base utilities..."
@@ -33,6 +32,7 @@ rm "$HOME/.posh/themes.zip"
 
 # Modified Oh My Posh configuration to use the selected theme
 cat << EOF >> "$HOME/.bashrc"
+
 # Oh My Posh configuration
 export PATH=\$PATH:\$HOME/.posh:
 eval "\$(oh-my-posh init bash)"
@@ -40,6 +40,7 @@ eval "\$(oh-my-posh init bash)"
 # Better command colors
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
+
 EOF
 
 echo "Setting timezone to America/Chicago..."
@@ -54,6 +55,7 @@ cat << 'EOF' >> "$HOME/.bashrc"
 source $HOME/.ble.sh/out/ble.sh
 bleopt history_share=1
 export HISTFILE="$HOME/.local/share/blesh/ble_history"
+
 EOF
 
 echo "Installing bat (cat replacement)..."
@@ -65,6 +67,7 @@ rm -rf bat.tar.gz bat-v0.25.0-x86_64-unknown-linux-gnu
 cat << 'EOF' >> "$HOME/.bashrc"
 # alias cat to bat (a cat replacement with wings)
 alias cat="bat"
+
 EOF
 
 echo "Installing eza (modern ls replacement)..."
@@ -79,12 +82,12 @@ cat << 'EOF' >> "$HOME/.bashrc"
 alias ls="eza"
 alias ll="eza -l"
 alias la="eza -la"
+
 EOF
 
 echo "Installing zoxide (modern cd replacement)..."
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 cat << 'EOF' >> "$HOME/.bashrc"
-
 # Add .local/bin to PATH if not already there
 if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
     export PATH="$HOME/.local/bin:$PATH"
@@ -92,6 +95,7 @@ fi
 
 eval "$(zoxide init bash)"
 alias cd="z"
+
 EOF
 
 echo "Installing fzf (fuzzy finder)..."
@@ -110,4 +114,4 @@ EOF
 
 echo '[[ -f ~/.bashrc ]] && source ~/.bashrc' >> ~/.bash_profile
 
-echo "Dakota's Awesome Terminal Feature installation complete."
+echo "customize-bash.sh installation complete."
