@@ -3,6 +3,7 @@
 set -e
 
 echo "Updating system and installing base utilities..."
+
 if command -v microdnf >/dev/null 2>&1; then
     PKG_UPDATE="microdnf update -y"
     PKG_INSTALL="microdnf install -y"
@@ -15,13 +16,14 @@ else
     echo "Neither microdnf nor dnf found. Exiting."
     exit 1
 fi
-
 echo "Using package manager: $(command -v microdnf || command -v dnf)"
 $PKG_UPDATE
 $PKG_INSTALL git tar unzip tzdata make gawk procps findutils nano
 $PKG_CLEAN
 
+
 echo "Installing Oh My Posh..."
+
 mkdir -p "$HOME/.posh"
 curl -fsSL https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -o "$HOME/.posh/oh-my-posh"
 chmod +x "$HOME/.posh/oh-my-posh"
@@ -29,8 +31,6 @@ mkdir -p "$HOME/.posh-themes"
 curl -fsSL https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip -o "$HOME/.posh/themes.zip"
 unzip "$HOME/.posh/themes.zip" -d "$HOME/.posh-themes"
 rm "$HOME/.posh/themes.zip"
-
-# Modified Oh My Posh configuration to use the selected theme
 cat << EOF >> "$HOME/.bashrc"
 
 # Oh My Posh configuration
@@ -43,11 +43,15 @@ export LSCOLORS=ExFxBxDxCxegedabagacad
 
 EOF
 
+
 echo "Setting timezone to America/Chicago..."
+
 export TZ=America/Chicago
 ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+
 echo "Installing ble.sh for Bash autosuggestions and syntax highlighting..."
+
 git clone --depth 1 https://github.com/akinomyoga/ble.sh.git "$HOME/.ble.sh"
 make -C "$HOME/.ble.sh"
 cat << 'EOF' >> "$HOME/.bashrc"
@@ -58,7 +62,9 @@ export HISTFILE="$HOME/.local/share/blesh/ble_history"
 
 EOF
 
+
 echo "Installing bat (cat replacement)..."
+
 curl -fsSL https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-unknown-linux-gnu.tar.gz -o bat.tar.gz
 tar -xzf bat.tar.gz --no-same-permissions --no-same-owner
 mv bat-v0.25.0-x86_64-unknown-linux-gnu/bat /usr/local/bin/bat
@@ -70,7 +76,9 @@ alias cat="bat"
 
 EOF
 
+
 echo "Installing eza (modern ls replacement)..."
+
 cd /tmp
 curl -L https://github.com/eza-community/eza/releases/download/v0.20.19/eza_x86_64-unknown-linux-gnu.zip -o eza.zip
 unzip eza.zip
@@ -85,7 +93,9 @@ alias la="eza -la"
 
 EOF
 
+
 echo "Installing zoxide (modern cd replacement)..."
+
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 cat << 'EOF' >> "$HOME/.bashrc"
 # Add .local/bin to PATH if not already there
@@ -98,7 +108,9 @@ alias cd="z"
 
 EOF
 
+
 echo "Installing fzf (fuzzy finder)..."
+
 git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
 "$HOME/.fzf/install" --all
 
@@ -112,6 +124,5 @@ export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window up:3:wrap"
 
 EOF
 
-echo '[[ -f ~/.bashrc ]] && source ~/.bashrc' >> ~/.bash_profile
 
 echo "customize-bash.sh installation complete."
