@@ -1,5 +1,5 @@
 {
-  "name": "dev-container",
+  "name": "customize-bash",
   "build": {
     "dockerfile": "Dockerfile",
     "context": ".."
@@ -8,7 +8,7 @@
     "init": "bash ${localWorkspaceFolder}/initialize-command.sh \"${localWorkspaceFolderBasename}\""
   },
   "mounts": [
-    "source=${localEnv:HOME}/.ssh,target=/opt/app-root/src/.ssh,type=bind,readonly",
+    "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,readonly",
     "source=${localEnv:HOME}/.gitconfig,target=/opt/app-root/src/.gitconfig,type=bind,consistency=cached",
     "source=${localWorkspaceFolderBasename}_zoxide,target=/opt/app-root/src/.local/share/zoxide,type=volume",
     "source=${localWorkspaceFolderBasename}_blesh,target=/opt/app-root/src/.local/share/blesh,type=volume"
