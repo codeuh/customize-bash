@@ -14,3 +14,8 @@ for VOLUME in "zoxide" "blesh"; do
         podman volume create "$VOLUME_NAME"
     fi
 done
+
+git config --global core.pager delta
+git config --global interactive.diffFilter 'delta --color-only'
+git config --global delta.navigate true
+git config --global merge.conflictStyle zdiff3
