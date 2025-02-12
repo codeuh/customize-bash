@@ -1,5 +1,70 @@
 FROM registry.access.redhat.com/ubi9/ubi-minimal:latest
 USER root
-COPY customize-bash.sh .
-RUN ./customize-bash.sh
+
+# add epel
+RUN rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+
+# install packages
+RUN microdnf update -y \
+    && microdnf install -y \
+    git \
+    tar \
+    unzip \
+    tzdata \
+    make \
+    gawk \
+    procps \
+    findutils \
+    nano \
+    bat \
+    zoxide \
+    fzf \
+    && microdnf clean all
+
+# set timezone
+ENV TZ=America/Chicago
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# install oh-my-posh
+RUN mkdir -p /root/.posh && \
+    curl -fsSL https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -o /root/.posh/oh-my-posh && \
+    chmod +x /root/.posh/oh-my-posh && \
+    mkdir -p /root/.posh-themes && \
+    curl -fsSL https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip -o /root/.posh/themes.zip && \
+    unzip /root/.posh/themes.zip -d /root/.posh-themes && \
+    rm /root/.posh/themes.zip
+   
+# install ble.sh
+RUN git clone --depth 1 https://github.com/akinomyoga/ble.sh.git /root/.ble.sh && \
+    make -C /root/.ble.sh
+
+# install eza
+RUN cd /tmp && \
+    curl -L https://github.com/eza-community/eza/releases/download/v0.20.19/eza_x86_64-unknown-linux-gnu.zip -o eza.zip && \
+    unzip eza.zip && \
+    mv eza /usr/local/bin/ && \
+    cd / && \
+    rm -rf /tmp/*
+
+# configure bash profile
+RUN echo 'source /root/.ble.sh/out/ble.sh' >> /root/.bashrc && \
+    echo 'bleopt history_share=1' >> /root/.bashrc && \
+    echo 'export HISTFILE="/root/.local/share/blesh/ble_history"' >> /root/.bashrc && \
+    echo 'export PATH=$PATH:/root/.posh' >> /root/.bashrc && \
+    echo 'eval "$(oh-my-posh init bash)"' >> /root/.bashrc && \
+    echo 'export CLICOLOR=1' >> /root/.bashrc && \
+    echo 'export LSCOLORS=ExFxBxDxCxegedabagacad' >> /root/.bashrc && \
+    echo 'alias ls="eza"' >> /root/.bashrc && \
+    echo 'alias ll="eza -l"' >> /root/.bashrc && \
+    echo 'alias la="eza -la"' >> /root/.bashrc && \
+    echo 'if [[ ":$PATH:" != *":/root/.local/bin:"* ]]; then export PATH="/root/.local/bin:$PATH"; fi' >> /root/.bashrc && \
+    echo 'eval "$(zoxide init bash)"' >> /root/.bashrc && \
+    echo 'alias cd="z"' >> /root/.bashrc && \
+    echo 'eval "$(fzf --bash)"' >> /root/.bashrc && \
+    echo 'export FZF_DEFAULT_OPTS="--layout=reverse --preview '\''bat --color=always {}'\''"' >> /root/.bashrc && \
+    echo 'export FZF_CTRL_T_COMMAND="find . -type f -not -path '\''./.git/*'\''"' >> /root/.bashrc && \
+    echo 'export FZF_CTRL_T_OPTS="--height 100% --preview '\''bat --color=always {}'\''"' >> /root/.bashrc && \
+    echo 'export FZF_CTRL_R_OPTS="--height 100% --preview '\''echo {}'\'' --preview-window up:3:wrap"' >> /root/.bashrc
+
+# set posh theme
 ENV POSH_THEME="/root/.posh-themes/tokyo.omp.json"
