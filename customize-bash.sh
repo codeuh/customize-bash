@@ -1,5 +1,6 @@
 #!/bin/bash
 # this script is used to install a suite of terminal customizations
+# making changes to this causes the docker builds to take too long. Moving it back to dockerfile for now.
 set -e
 
 echo "Updating system and installing base utilities..."
@@ -18,7 +19,7 @@ else
 fi
 echo "Using package manager: $(command -v microdnf || command -v dnf)"
 $PKG_UPDATE
-$PKG_INSTALL git tar unzip tzdata make gawk procps findutils nano
+$PKG_INSTALL git tar unzip tzdata make gawk procps findutils nano bat zoxide fzf
 $PKG_CLEAN
 
 
@@ -63,13 +64,6 @@ export HISTFILE="$HOME/.local/share/blesh/ble_history"
 EOF
 
 
-echo "Installing bat (cat replacement)..."
-
-curl -fsSL https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-unknown-linux-gnu.tar.gz -o bat.tar.gz
-tar -xzf bat.tar.gz --no-same-permissions --no-same-owner
-mv bat-v0.25.0-x86_64-unknown-linux-gnu/bat /usr/local/bin/bat
-chmod +x /usr/local/bin/bat
-rm -rf bat.tar.gz bat-v0.25.0-x86_64-unknown-linux-gnu
 cat << 'EOF' >> "$HOME/.bashrc"
 # alias cat to bat (a cat replacement with wings)
 alias cat="bat"
@@ -94,9 +88,6 @@ alias la="eza -la"
 EOF
 
 
-echo "Installing zoxide (modern cd replacement)..."
-
-curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 cat << 'EOF' >> "$HOME/.bashrc"
 # Add .local/bin to PATH if not already there
 if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
@@ -111,16 +102,14 @@ EOF
 
 echo "Installing fzf (fuzzy finder)..."
 
-git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
-"$HOME/.fzf/install" --all
-
 echo "Setting fzf environment variables..."
 cat << 'EOF' >> "$HOME/.bashrc"
+eval "$(fzf --bash)"
 # Setting fzf environment variables...
 export FZF_DEFAULT_OPTS="--layout=reverse --preview 'bat --color=always {}'"
 export FZF_CTRL_T_COMMAND="find . -type f -not -path './.git/*'"
-export FZF_CTRL_T_OPTS="--preview 'bat --color=always {}'"
-export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window up:3:wrap"
+export FZF_CTRL_T_OPTS="--height 100% --preview 'bat --color=always {}'"
+export FZF_CTRL_R_OPTS="--height 100% --preview 'echo {}' --preview-window up:3:wrap"
 
 EOF
 
