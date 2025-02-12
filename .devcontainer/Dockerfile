@@ -5,8 +5,8 @@ USER root
 RUN rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 
 # install packages
-RUN microdnf update -y \
-    && microdnf install -y \
+RUN microdnf update -y 
+RUN microdnf install -y \
     git \
     tar \
     unzip \
@@ -19,6 +19,8 @@ RUN microdnf update -y \
     bat \
     zoxide \
     fzf \
+    ripgrep \
+    git-delta \
     && microdnf clean all
 
 # set timezone
@@ -54,9 +56,9 @@ RUN echo 'source /root/.ble.sh/out/ble.sh' >> /root/.bashrc && \
     echo 'eval "$(oh-my-posh init bash)"' >> /root/.bashrc && \
     echo 'export CLICOLOR=1' >> /root/.bashrc && \
     echo 'export LSCOLORS=ExFxBxDxCxegedabagacad' >> /root/.bashrc && \
-    echo 'alias ls="eza"' >> /root/.bashrc && \
-    echo 'alias ll="eza -l"' >> /root/.bashrc && \
-    echo 'alias la="eza -la"' >> /root/.bashrc && \
+    echo 'alias ls="eza --icons"' >> /root/.bashrc && \
+    echo 'alias ll="eza -l --icons"' >> /root/.bashrc && \
+    echo 'alias la="eza -la --icons"' >> /root/.bashrc && \
     echo 'if [[ ":$PATH:" != *":/root/.local/bin:"* ]]; then export PATH="/root/.local/bin:$PATH"; fi' >> /root/.bashrc && \
     echo 'eval "$(zoxide init bash)"' >> /root/.bashrc && \
     echo 'alias cd="z"' >> /root/.bashrc && \
